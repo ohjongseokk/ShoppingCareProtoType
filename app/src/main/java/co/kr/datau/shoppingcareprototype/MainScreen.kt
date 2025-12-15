@@ -230,7 +230,11 @@ fun MainScreen(
                             .fillMaxWidth()
                             .weight(1f)
                             .clickable {
-                                context.startActivity(Intent(context, CalendarNoteActivity::class.java))
+                                context.startActivity(
+                                    Intent(context, ShoppingListActivity::class.java).apply {
+                                        putExtra("selectedType", 0)
+                                    }
+                                )
                             },
                         painter = painterResource(R.drawable.main05),
                         contentDescription = null
@@ -241,8 +245,11 @@ fun MainScreen(
                             .fillMaxWidth()
                             .weight(1f)
                             .clickable {
-                                context.startActivity(Intent(context, ListNoteActivity::class.java))
-//                                context.startActivity(Intent(context, EditActivity::class.java))
+                                context.startActivity(
+                                    Intent(context, ShoppingListActivity::class.java).apply {
+                                        putExtra("selectedType", 1)
+                                    }
+                                )
                             },
                         painter = painterResource(R.drawable.main06),
                         contentDescription = null

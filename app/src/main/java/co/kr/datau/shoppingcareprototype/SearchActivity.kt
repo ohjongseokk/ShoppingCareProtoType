@@ -1,5 +1,6 @@
 package co.kr.datau.shoppingcareprototype
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
@@ -141,29 +142,13 @@ fun SearchScreen(
         }
 
     }
-
-
-//    Column(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .verticalScroll(verticalScroll)
-//    ) {
-//
-//    }
-
-//    Image(
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 10.dp, horizontal = 20.dp),
-//        painter = painterResource(R.drawable.search_btn),
-//        contentDescription = null
-//    )
 }
 
 @Composable
 fun SearchByNameScreen(
     modifier: Modifier = Modifier,
 ) {
+    val activity = LocalActivity.current
     var startSearchBar by remember { mutableStateOf(false) }
     var startKeyword by remember { mutableStateOf(false) }
     val offsetY by animateDpAsState(
@@ -283,7 +268,13 @@ fun SearchByNameScreen(
         Image(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 20.dp),
+                .padding(vertical = 10.dp, horizontal = 20.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    activity?.startActivity(Intent(activity, EmptyActivity::class.java))
+                },
             painter = painterResource(R.drawable.search_btn),
             contentDescription = null
         )
@@ -328,7 +319,7 @@ fun SearchByDateScreen(
                     indication = null
                 ) {
                     if (isSelectedDate) {
-                        activity?.finish()
+                        activity?.startActivity(Intent(activity, EmptyActivity::class.java))
                     }
                 }
                 .padding(vertical = 10.dp, horizontal = 20.dp),

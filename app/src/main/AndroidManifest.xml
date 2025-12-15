@@ -29,9 +29,8 @@
         <activity android:name=".EmptyActivity" android:exported="false"/>
         <activity android:name=".MenuActivity" android:exported="false"/>
         <activity android:name=".SearchActivity" android:exported="false"/>
-        <activity android:name=".CalendarNoteActivity" android:exported="false"/>
-        <activity android:name=".ListNoteActivity" android:exported="false"/>
         <activity android:name=".EditActivity" android:exported="false"/>
+        <activity android:name=".ShoppingListActivity" android:exported="false"/>
     </application>
 
 </manifest>
