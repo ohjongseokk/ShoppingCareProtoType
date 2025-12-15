@@ -15,6 +15,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -199,10 +200,10 @@ fun MainScreen(
                         .padding(horizontal = 20.dp)
                         .border(
                             BorderStroke(
-                                width = 2.dp,
+                                width = 1.dp,
                                 brush = if (boxSize != Size.Zero) {
                                     Brush.sweepGradient(
-                                        colors = listOf(Color(0xFF42DEE5), Color(0xFFD6FF76)),
+                                        colors = listOf(Color(0xFFFFFFF), Color(0xFF000000)),
                                         center = Offset(boxSize.width / 2f, boxSize.height / 2f)
                                     ).rotate(rotation)
                                 } else {
@@ -229,7 +230,10 @@ fun MainScreen(
                         modifier = modifier
                             .fillMaxWidth()
                             .weight(1f)
-                            .clickable {
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
                                 context.startActivity(
                                     Intent(context, ShoppingListActivity::class.java).apply {
                                         putExtra("selectedType", 0)
@@ -244,7 +248,10 @@ fun MainScreen(
                         modifier = modifier
                             .fillMaxWidth()
                             .weight(1f)
-                            .clickable {
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
                                 context.startActivity(
                                     Intent(context, ShoppingListActivity::class.java).apply {
                                         putExtra("selectedType", 1)
@@ -257,7 +264,9 @@ fun MainScreen(
                 }
                 Spacer(modifier = modifier.size(10.dp))
                 Image(
-                    modifier = modifier.fillMaxWidth(),
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
                     painter = painterResource(R.drawable.main07),
                     contentDescription = null
                 )
@@ -280,7 +289,10 @@ fun MainScreen(
                     Image(
                         modifier = modifier
                             .fillMaxWidth()
-                            .clickable {
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
                                 val intent = Intent(context, ReportActivity::class.java)
                                 context.startActivity(intent)
                             },
@@ -292,7 +304,10 @@ fun MainScreen(
                     Image(
                         modifier = modifier
                             .fillMaxWidth()
-                            .clickable {
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
                                 val intent = Intent(context, ReportActivity::class.java)
                                 context.startActivity(intent)
                             },
@@ -345,7 +360,10 @@ fun MainScreen(
                                 shape = RoundedCornerShape(14.dp),
                                 color = Color(0xFF111111)
                             )
-                            .clickable {
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
                                 isOpenBottomSheet = true
                             }
                             .padding(vertical = 11.dp, horizontal = 12.dp)
@@ -416,6 +434,7 @@ fun MainScreen(
                         modifier = modifier
                             .fillMaxWidth()
                             .clickable {
+                                isOpenBottomSheet = false
                                 context.startActivity(Intent(context, AddBySelfActivity::class.java))
                             },
                         painter = painterResource(R.drawable.frame_427319564),
