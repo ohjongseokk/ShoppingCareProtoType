@@ -11,6 +11,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -56,6 +57,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
@@ -64,6 +66,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.fontscaling.MathUtils.lerp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -85,7 +88,7 @@ fun MainScreen(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = LinearEasing),
+            animation = tween(3000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         )
     )
@@ -117,6 +120,26 @@ fun MainScreen(
     var isOpenBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
+    )
+
+    val infiniteTransition2 = rememberInfiniteTransition()
+    val progress1 by infiniteTransition2.animateFloat(
+        initialValue = -1f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2000),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    val infiniteTransition3 = rememberInfiniteTransition()
+    val progress2 by infiniteTransition3.animateFloat(
+        initialValue = -1f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 3000),
+            repeatMode = RepeatMode.Restart
+        )
     )
 
     Column(
@@ -198,12 +221,13 @@ fun MainScreen(
                             )
                         }
                         .padding(horizontal = 20.dp)
+                        .clip(RoundedCornerShape(20.dp))
                         .border(
                             BorderStroke(
-                                width = 1.dp,
+                                width = 2.dp,
                                 brush = if (boxSize != Size.Zero) {
                                     Brush.sweepGradient(
-                                        colors = listOf(Color(0xFFFFFFF), Color(0xFF000000)),
+                                        colors = listOf(Color(0xFF42DEE5), Color(0xFFD6FF76)),
                                         center = Offset(boxSize.width / 2f, boxSize.height / 2f)
                                     ).rotate(rotation)
                                 } else {
@@ -211,7 +235,10 @@ fun MainScreen(
                                 },
                             ),
                             shape = RoundedCornerShape(20.dp)
-                        ),
+                        )
+                        .clickable {
+                            context.startActivity(Intent(context, SkeletonActivity::class.java))
+                        },
                     painter = painterResource(R.drawable.banner_01),
                     contentDescription = null
                 )
@@ -226,41 +253,164 @@ fun MainScreen(
                 Row(
                     modifier = modifier.padding(horizontal = 20.dp)
                 ) {
-                    Image(
+//                    Image(
+//                        modifier = modifier
+//                            .fillMaxWidth()
+//                            .weight(1f)
+//                            .clickable(
+//                                interactionSource = remember { MutableInteractionSource() },
+//                                indication = null
+//                            ) {
+//                                context.startActivity(
+//                                    Intent(context, ShoppingListActivity::class.java).apply {
+//                                        putExtra("selectedType", 0)
+//                                    }
+//                                )
+//                            },
+//                        painter = painterResource(R.drawable.main05),
+//                        contentDescription = null
+//                    )
+                    Box(
                         modifier = modifier
                             .fillMaxWidth()
                             .weight(1f)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) {
-                                context.startActivity(
-                                    Intent(context, ShoppingListActivity::class.java).apply {
-                                        putExtra("selectedType", 0)
-                                    }
+                            .onSizeChanged {
+                                boxSize = Size(
+                                    width = it.width.toFloat(),
+                                    height = it.height.toFloat()
                                 )
-                            },
-                        painter = painterResource(R.drawable.main05),
-                        contentDescription = null
-                    )
+                            }
+                            .clip(RoundedCornerShape(20.dp))
+                    ) {
+                        Image(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) {
+                                    context.startActivity(
+                                        Intent(context, ShoppingListActivity::class.java).apply {
+                                            putExtra("selectedType", 0)
+                                        }
+                                    )
+                                },
+                            painter = painterResource(R.drawable.main05),
+                            contentDescription = null
+                        )
+                        if (boxSize != Size.Zero) {
+                            Canvas(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                val canvasWidth = boxSize.width
+                                val canvasHeight = boxSize.height
+
+                                val rectWidth = 30.dp.toPx()
+                                val rectHeight = (canvasHeight + canvasWidth) * 1.5f
+
+                                val startX = -rectWidth
+                                val startY = -rectHeight
+                                val endX = canvasWidth
+                                val endY = canvasHeight
+
+                                val fraction = (progress1 + 1f) / 2f
+                                val currentX = lerp(startX, endX, fraction)
+                                val currentY = lerp(startY, endY, fraction)
+
+                                rotate(
+                                    degrees = 45f,
+                                    pivot = Offset(currentX + rectWidth / 2f, currentY + rectHeight / 2f)
+                                ) {
+                                    drawRect(
+                                        color = Color.White.copy(alpha = 0.4f),
+                                        topLeft = Offset(currentX, currentY),
+                                        size = Size(rectWidth, rectHeight)
+                                    )
+                                }
+
+                            }
+                        }
+                    }
                     Spacer(modifier = modifier.size(8.dp))
-                    Image(
+//                    Image(
+//                        modifier = modifier
+//                            .fillMaxWidth()
+//                            .weight(1f)
+//                            .clickable(
+//                                interactionSource = remember { MutableInteractionSource() },
+//                                indication = null
+//                            ) {
+//                                context.startActivity(
+//                                    Intent(context, ShoppingListActivity::class.java).apply {
+//                                        putExtra("selectedType", 1)
+//                                    }
+//                                )
+//                            },
+//                        painter = painterResource(R.drawable.main06),
+//                        contentDescription = null
+//                    )
+
+                    Box(
                         modifier = modifier
                             .fillMaxWidth()
                             .weight(1f)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) {
-                                context.startActivity(
-                                    Intent(context, ShoppingListActivity::class.java).apply {
-                                        putExtra("selectedType", 1)
-                                    }
+                            .onSizeChanged {
+                                boxSize = Size(
+                                    width = it.width.toFloat(),
+                                    height = it.height.toFloat()
                                 )
-                            },
-                        painter = painterResource(R.drawable.main06),
-                        contentDescription = null
-                    )
+                            }
+                            .clip(RoundedCornerShape(20.dp))
+                    ) {
+                        Image(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) {
+                                    context.startActivity(
+                                        Intent(context, ShoppingListActivity::class.java).apply {
+                                            putExtra("selectedType", 1)
+                                        }
+                                    )
+                                },
+                            painter = painterResource(R.drawable.main06),
+                            contentDescription = null
+                        )
+                        if (boxSize != Size.Zero) {
+                            Canvas(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                val canvasWidth = boxSize.width
+                                val canvasHeight = boxSize.height
+
+                                val rectWidth = 30.dp.toPx()
+                                val rectHeight = (canvasHeight + canvasWidth) * 1.5f
+
+                                val startX = -rectWidth
+                                val startY = -rectHeight
+                                val endX = canvasWidth
+                                val endY = canvasHeight
+
+                                val fraction = (progress2 + 1f) / 2f
+                                val currentX = lerp(startX, endX, fraction)
+                                val currentY = lerp(startY, endY, fraction)
+
+                                rotate(
+                                    degrees = 45f,
+                                    pivot = Offset(currentX + rectWidth / 2f, currentY + rectHeight / 2f)
+                                ) {
+                                    drawRect(
+                                        color = Color.White.copy(alpha = 0.4f),
+                                        topLeft = Offset(currentX, currentY),
+                                        size = Size(rectWidth, rectHeight)
+                                    )
+                                }
+
+                            }
+                        }
+                    }
                 }
                 Spacer(modifier = modifier.size(10.dp))
                 Image(

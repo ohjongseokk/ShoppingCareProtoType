@@ -51,6 +51,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -345,7 +346,7 @@ fun ShoppingListListScreen(
                                 .fillMaxWidth()
                                 .background(
 //                                    color = if (isSticky) Color.White else Color.Transparent
-                                    color = if (isSticky) Color.White else Color.Transparent
+                                    color = if (isSticky) Color.White else Color.White
                                 )
                                 .padding(horizontal = 30.dp, vertical = 14.dp)
                         ) {
@@ -366,13 +367,57 @@ fun ShoppingListListScreen(
                             Spacer(modifier.size(20.dp))
                         }
 
-                        Image(
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 20.dp),
-                            painter = painterResource(R.drawable.note_item),
-                            contentDescription = null
-                        )
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
+                                .background(
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(20.dp)
+                                )
+                                .padding(20.dp)
+                        ) {
+                            SkeletonBox(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                            )
+                            Spacer(modifier.size(12.dp))
+                            Column {
+                                SkeletonBox(
+                                    modifier = Modifier
+                                        .size(width = 40.dp, height = 10.dp)
+                                        .clip(RoundedCornerShape(6.dp))
+                                )
+                                Spacer(modifier.size(8.dp))
+                                SkeletonBox(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(16.dp)
+                                        .clip(RoundedCornerShape(6.dp))
+                                )
+                                Spacer(modifier.size(6.dp))
+                                SkeletonBox(
+                                    modifier = Modifier
+                                        .size(width = 60.dp, height = 16.dp)
+                                        .clip(RoundedCornerShape(100.dp))
+                                )
+                                Spacer(modifier.size(10.dp))
+                                SkeletonBox(
+                                    modifier = Modifier
+                                        .size(width = 90.dp, height = 20.dp)
+                                        .clip(RoundedCornerShape(100.dp))
+                                )
+                            }
+                        }
+
+
+//                        Image(
+//                            modifier = modifier
+//                                .fillMaxWidth()
+//                                .padding(horizontal = 20.dp),
+//                            painter = painterResource(R.drawable.group_54),
+//                            contentDescription = null
+//                        )
 
                         if (idx != 3) {
                             Spacer(modifier.size(10.dp))
